@@ -1,65 +1,69 @@
-# TicTacToeGame
+# ⭕ Tic-Tac-Toe (Java)
 
-Simple console-based Tic-Tac-Toe game written in Java.
+A console-based Tic-Tac-Toe game in Java, built around an interface-driven design rather than a single procedural script. Supports Player vs Player and Player vs Computer modes, with a simple but genuine AI opponent.
 
-## What this is
+## ✨ Features
 
-This repository contains a small Java implementation of Tic-Tac-Toe with a human player and a simple computer player. Use the `TicTacToeApp` main class to run the game from a terminal or from your IDE.
+- Player vs Player or Player vs Computer modes
+- Computer opponent that can actually win and block, not just play randomly
+- Input validation — handles out-of-range moves, already-taken cells, and malformed input without crashing
+- Clean 3x3 board display after every move
 
-## Prerequisites
+## 🧠 OOP Concepts Demonstrated
 
-- Java JDK 11 or newer installed and `java`/`javac` on your PATH.
-- (Optional) IDE that supports Java (IntelliJ IDEA, VS Code with Java extensions, Eclipse, etc.).
+| Concept | Where |
+|---|---|
+| **Interface** | `Player` defines the contract (`getSymbol()`, `getMove()`) that both human and computer players must fulfill |
+| **Polymorphism** | `Game` calls `player.getMove(board)` without knowing or caring whether it's a `HumanPlayer` or `ComputerPlayer` |
+| **Encapsulation** | `Board`'s grid is private; the only way to change it is through `placeMove()`, which validates first |
+| **2D Arrays** | The board itself is a `char[3][3]` grid |
+| **Simple AI logic** | `ComputerPlayer` checks: can I win? → can I block the opponent's win? → else play randomly |
 
-To check Java is available, run in PowerShell:
+## 🛠️ Tech Stack
 
-```powershell
-java -version
-javac -version
+- **Language:** Java (no external libraries/frameworks)
+
+## 📁 Project Structure
+
+```
+.
+├── Board.java          # Owns the grid, win/draw detection, and a safe move-simulation helper for AI use
+├── Player.java         # Interface — the contract every player type must fulfill
+├── HumanPlayer.java     # Reads moves from console input, with input validation
+├── ComputerPlayer.java # Simple AI: win > block > random
+├── Game.java            # Runs the turn loop, alternating between two Player objects
+└── TicTacToeApp.java   # Main class — lets you choose game mode, then starts Game
 ```
 
-## Build and run (PowerShell)
+## ▶️ How to Run
 
-1. Open PowerShell in the project folder (where the `.java` files live).
-
-2. Compile the Java sources:
-
-```powershell
+```bash
 javac *.java
-```
-
-This will produce `.class` files in the same folder.
-
-3. Run the game (the main class is `TicTacToeApp`):
-
-```powershell
 java TicTacToeApp
 ```
 
-Follow the on-screen prompts to play.
+> Requires Java 8 or later — no modern-syntax features are used.
 
-## Run from an IDE
+## 📋 How to Play
 
-- Open the project folder in your IDE.
-- Import as a Java project if required.
-- Run the `TicTacToeApp` class (right-click on file -> Run, or use the Run configuration for the main class).
+Moves are entered as **row column** (each 0, 1, or 2), on a single line:
 
-## Notes & Troubleshooting
-
-- If you get permission/auth errors when compiling or running, ensure `javac` and `java` are installed and the PATH is configured correctly.
-- If files are added later and you prefer a separate build/output directory, consider using a build tool (Maven/Gradle) or compile into a `bin` folder like:
-
-```powershell
-javac -d bin *.java
-java -cp bin TicTacToeApp
+```
+ (0,0) | (0,1) | (0,2)
+-------+-------+-------
+ (1,0) | (1,1) | (1,2)
+-------+-------+-------
+ (2,0) | (2,1) | (2,2)
 ```
 
-## Suggested next steps
+Example: to play the top-middle cell, type `0 1`.
 
-- Add a `README.md` description (you're viewing it now!).
-- Add a `.gitignore` to exclude IDE files and compiled `.class` files (I can add one for you).
-- Add a license if you want to share the project publicly.
+## 🐛 A Bug Worth Mentioning
 
----
+Early input handling used two separate `Scanner.nextInt()` calls for row and column. If a move was accidentally split across two lines (e.g. typing `0`, pressing Enter, then `0 0`), a leftover number stayed queued in the input stream — silently shifting every move afterward by one cell. Fixed by reading each move as a single line and parsing it as one atomic unit, which makes this entire class of bug impossible regardless of how the input is typed.
 
-If you'd like, I can add a Java `.gitignore` and a short `LICENSE` (MIT) now and commit them for you.
+## 🔭 Future Improvements
+
+- [ ] Smarter AI (minimax algorithm for an unbeatable computer opponent)
+- [ ] GUI version using Swing or JavaFX
+- [ ] Score tracking across multiple rounds
